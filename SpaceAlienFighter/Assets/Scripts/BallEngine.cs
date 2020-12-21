@@ -8,17 +8,25 @@ public class BallEngine : MonoBehaviour
 
     float xInput, zInput;
 
-    public float speed;
+    public float moveSpeed;
 
     public Material greenMat;
     public Material redTexture;
 
+    public AudioClip coinAudio;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        GetComponent<Renderer>().material = greenMat;
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        GetComponent<Renderer>().material = greenMat;
+/*        rb = GetComponent<Rigidbody>();
+        GetComponent<Renderer>().material = greenMat;*/
 
     }
 
@@ -33,7 +41,15 @@ public class BallEngine : MonoBehaviour
         xInput = Input.GetAxis("Horizontal");
         zInput = Input.GetAxis("Vertical");
 
-        rb.AddForce(xInput * speed, 0, zInput * speed);
+        //rb.AddForce(xInput * moveSpeed, 0, zInput * moveSpeed);
+    }
+
+    private void FixedUpdate()
+    {
+        float xVelocity = xInput * moveSpeed;
+        float zVelocity = zInput * moveSpeed;
+
+        rb.velocity = new Vector3(xVelocity, rb.velocity.y, zVelocity);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -45,6 +61,13 @@ public class BallEngine : MonoBehaviour
 
             //Destroys object object collided with
             Destroy(collision.gameObject);
+        } 
+        
+        if (collision.gameObject.tag == "Coin")
+        {
+            Destroy(collision.gameObject);
+            GetComponent<AudioSource>().PlayOneShot(coinAudio);
+            //Destroys object object collided with
         }
 
         //GetComponent<Renderer>().material.color = Color.red;
