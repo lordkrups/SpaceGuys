@@ -5,7 +5,9 @@ using UnityEngine;
 public class BallEngine : MonoBehaviour
 {
     Rigidbody rb;
-
+    public float dragRate;
+    public float minDrag;
+    public float maxDrag;
     float xInput, zInput;
 
     public float moveSpeed;
@@ -14,6 +16,8 @@ public class BallEngine : MonoBehaviour
     public Material redTexture;
 
     public AudioClip coinAudio;
+
+    public FloatingJoystick floatingJoystick;
 
     void Awake()
     {
@@ -38,18 +42,31 @@ public class BallEngine : MonoBehaviour
             rb.AddForce(Vector3.up * 500);
         }
 
-        xInput = Input.GetAxis("Horizontal");
-        zInput = Input.GetAxis("Vertical");
+        //xInput = Input.GetAxis("Horizontal");
+        //zInput = Input.GetAxis("Vertical");
 
         //rb.AddForce(xInput * moveSpeed, 0, zInput * moveSpeed);
     }
 
     private void FixedUpdate()
     {
-        float xVelocity = xInput * moveSpeed;
-        float zVelocity = zInput * moveSpeed;
+/*        float xVelocity = xInput * moveSpeed;
+        float zVelocity = zInput * moveSpeed;*/
 
-        rb.velocity = new Vector3(xVelocity, rb.velocity.y, zVelocity);
+        //rb.velocity = new Vector3(xVelocity, rb.velocity.y, zVelocity);
+
+        Vector3 direction = Vector3.forward * floatingJoystick.Vertical + Vector3.right * floatingJoystick.Horizontal;
+        rb.AddForce(direction * moveSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        if (floatingJoystick.isPressed == false && rb.drag <= maxDrag)
+        {
+            rb.drag += dragRate;
+        } 
+        else if (floatingJoystick.isPressed == true && rb.drag >= minDrag)
+        {
+            rb.drag -= dragRate / 2;
+        }
+
+        Debug.Log("Velocity: "+rb.velocity);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -63,12 +80,7 @@ public class BallEngine : MonoBehaviour
             Destroy(collision.gameObject);
         } 
         
-        if (collision.gameObject.tag == "Coin")
-        {
-            Destroy(collision.gameObject);
-            GetComponent<AudioSource>().PlayOneShot(coinAudio);
-            //Destroys object object collided with
-        }
+
 
         //GetComponent<Renderer>().material.color = Color.red;
         GetComponent<Renderer>().material = redTexture;
@@ -79,5 +91,15 @@ public class BallEngine : MonoBehaviour
         //GetComponent<Renderer>().material.color = Color.green;
         GetComponent<Renderer>().material = greenMat;
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Coin")
+        {
+            Destroy(other.gameObject);
+            GetComponent<AudioSource>().PlayOneShot(coinAudio);
+            //Destroys object object collided with
+        }
     }
 }

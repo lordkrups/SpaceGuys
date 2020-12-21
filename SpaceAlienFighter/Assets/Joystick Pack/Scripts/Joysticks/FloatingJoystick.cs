@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class FloatingJoystick : Joystick
 {
+    public bool isPressed;
     protected override void Start()
     {
         base.Start();
@@ -13,6 +14,7 @@ public class FloatingJoystick : Joystick
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        isPressed = true;
         background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
         background.gameObject.SetActive(true);
         base.OnPointerDown(eventData);
@@ -22,5 +24,6 @@ public class FloatingJoystick : Joystick
     {
         background.gameObject.SetActive(false);
         base.OnPointerUp(eventData);
+        isPressed = false;
     }
 }

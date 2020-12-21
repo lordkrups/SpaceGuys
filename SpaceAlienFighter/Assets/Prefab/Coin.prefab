@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 2
+  col: {fileID: 5610727781035564959}
 --- !u!136 &5610727781035564959
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -133,9 +134,9 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2449412492007229201}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.35
-  m_Height: 1.25
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.55, z: 0}

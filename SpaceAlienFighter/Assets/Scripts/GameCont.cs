@@ -90,7 +90,7 @@ public class GameCont : MonoBehaviour
         {
 
             int rand = Random.Range(0, 3);
-            Debug.Log(rand);
+            //Debug.Log(rand);
             switch (rand)
             {
                 case 0:
